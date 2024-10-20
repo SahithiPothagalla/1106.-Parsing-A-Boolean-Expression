@@ -1,0 +1,22 @@
+class Solution:
+    def parseBoolExpr(self, expression: str) -> bool:
+        stk = []
+        for ch in expression:
+            if ch == ',': continue
+            if ch == ')':
+                t = f = False
+                while stk[-1] != '(':
+                    top = stk.pop()
+                    t |= top == 't'
+                    f |= top == 'f'
+                stk.pop()  
+                op = stk.pop()  
+                stk.append('t' if (op == '|' and t) or (op == '&' and not f) else 'f')
+                if op == '!': stk[-1] = 'f' if t else 't'
+            else: stk.append(ch)
+        return stk[-1] == 't'
+solution = Solution()
+print(solution.parseBoolExpr("&(t,t,t)"))  
+print(solution.parseBoolExpr("&(|(f))")) 
+print(solution.parseBoolExpr("|(f,f,f,t)"))  
+print(solution.parseBoolExpr("!(&(f,t))"))
